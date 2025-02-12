@@ -5,20 +5,24 @@ if (!require("SpaDES.project")){
 }
 
 out <- SpaDES.project::setupProject(
-  times = list(start = 2011, end = 2015),
-  Restart = TRUE,
-  paths = list(projectPath = getwd()),
+  paths = list(projectPath = getwd(),
+               inputPath = "inputs",
+               outputPath = "output",
+               cachePath = "cache"),
   options = options(spades.moduleCodeChecks = FALSE,
                     spades.recoveryMode = FALSE),
+  times = list(start = 2011, end = 2015),
   modules = c("PredictiveEcology/Biomass_speciesFactorial@development",
               "PredictiveEcology/Biomass_borealDataPrep@development",
               "PredictiveEcology/Biomass_speciesParameters@development",
-              "PredictiveEcology/Biomass_yieldTables@main",
+              "DominiqueCaron/Biomass_yieldTables@main",
               "DominiqueCaron/LandRCBM_split3pools@module-rewriting",
               "PredictiveEcology/Biomass_core@main"
   ),
   params = list(
     .globals = list(
+      dataYear = 2011, #will get kNN 2011 data, and NTEMS 2011 landcover
+      .plots = c("png"),
       sppEquivCol = LandR::equivalentNameColumn(
         c("Abie_las", "Betu_pap", "Pice_gla", "Pice_mar", "Pinu_con", "Popu_tre",
           "Pice_eng"), LandR::sppEquivalencies_CA), ".studyAreaName" = "RIA"
@@ -39,13 +43,13 @@ out <- SpaDES.project::setupProject(
       speciesFittingApproach = "focal"
     ),
     Biomass_yieldTables = list(
-      moduleNameAndBranch = "PredictiveEcology/Biomass_core@development (>= 1.3.9)",
+      moduleNameAndBranch = "PredictiveEcology/Biomass_core@main",
       .plots = "png",
       .useCache = "generateData"
     )
   ),
   packages = c("googledrive", 'RCurl', 'XML', "stars"),
-  useGit = T,
+  useGit = F,
   functions = "R/getRIA.R",
   # Study area is RIA
   studyArea = {
@@ -71,6 +75,8 @@ out <- SpaDES.project::setupProject(
   }
 )
 
+
 out$loadOrder <- unlist(out$modules)
 
-simOut <- SpaDES.core::simInitAndSpades2(out)
+initOut <- SpaDES.core::simInit2(out)
+simOut <- SpaDES.core::spades(initOut)
