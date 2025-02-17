@@ -16,9 +16,9 @@ out <- SpaDES.project::setupProject(
     "PredictiveEcology/Biomass_speciesFactorial@development",
     "PredictiveEcology/Biomass_borealDataPrep@development",
     "PredictiveEcology/Biomass_speciesParameters@development",
-    "DominiqueCaron/Biomass_yieldTables@main",
+    "DominiqueCaron/Biomass_yieldTables@reduce-RAM-demand",
     "PredictiveEcology/Biomass_core@main",
-    "DominiqueCaron/LandRCBM_split3pools@module-rewriting"
+    "DominiqueCaron/LandRCBM_split3pools@add-summary-figures"
   ),
   params = list(
     .globals = list(
@@ -52,30 +52,21 @@ out <- SpaDES.project::setupProject(
   useGit = F,
   functions = "R/getRIA.R",
   # Study area is RIA
-  # studyAreaLarge = {
-  #   reproducible::prepInputs(url = "https://drive.google.com/file/d/1LxacDOobTrRUppamkGgVAUFIxNT4iiHU/view?usp=sharing",
-  #                            destinationPath = "inputs",
-  #                            fun = getRIA,
-  #                            overwrite = TRUE)
-  # },
-  # studyArea = terra::buffer(studyAreaLarge),
-  # rasterToMatch = {
-  #   targetCRS <- terra::crs(studyArea)
-  #   rtm<- terra::rast(studyArea, res = c(250, 250), crs = targetCRS)
-  #   rtm[] <- 1
-  #   rtm <- terra::mask(rtm, studyArea)
-  #   rtm
-  #   },
-  studyArea = {
-    reproducible::prepInputs(url = "https://drive.google.com/file/d/1LxacDOobTrRUppamkGgVAUFIxNT4iiHU/view?usp=sharing",
-                             destinationPath = "inputs",
-                             fun = sf::st_read,
-                             overwrite = TRUE) |>
-      terra::vect() |>
-      terra::crop(terra::ext(1150000, 1200000, 1250000, 1300000)) |>
-      terra::aggregate()
+  studyAreaLarge = {
+    reproducible::prepInputs(
+      url = "https://drive.google.com/file/d/1LxacDOobTrRUppamkGgVAUFIxNT4iiHU/view?usp=sharing",
+      destinationPath = "inputs",
+      fun = getRIA,
+      overwrite = TRUE
+    )
   },
-  studyAreaLarge = studyArea,
+  studyArea = studyAreaLarge, rasterToMatch = {
+    targetCRS <- terra::crs(studyArea)
+    rtm <- terra::rast(studyArea, res = c(250, 250), crs = targetCRS)
+    rtm[] <- 1
+    rtm <- terra::mask(rtm, studyArea)
+    rtm
+  },
   rasterToMatch = {
     targetCRS <- terra::crs(studyArea)
     rtm<- terra::rast(studyArea, res = c(250, 250), crs = targetCRS)
