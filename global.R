@@ -16,14 +16,15 @@ out <- SpaDES.project::setupProject(
     "PredictiveEcology/Biomass_speciesFactorial@development",
     "PredictiveEcology/Biomass_borealDataPrep@development",
     "PredictiveEcology/Biomass_speciesParameters@development",
-    "DominiqueCaron/Biomass_yieldTables@reduce-RAM-demand",
+    "PredictiveEcology/Biomass_yieldTables@main",
     "PredictiveEcology/Biomass_core@main",
-    "DominiqueCaron/LandRCBM_split3pools@add-summary-figures"
+    "PredictiveEcology/LandRCBM_split3pools@master"
   ),
   params = list(
     .globals = list(
       dataYear = 2011, #will get kNN 2011 data, and NTEMS 2011 landcover
       .plots = c("png"),
+      .plotInterval = 10,
       sppEquivCol = 'LandR',
       .studyAreaName = "RIA"
     ),
@@ -59,14 +60,14 @@ out <- SpaDES.project::setupProject(
       fun = getRIA,
       overwrite = TRUE
     )
-  },
+  }, 
   studyArea = studyAreaLarge, rasterToMatch = {
     targetCRS <- terra::crs(studyArea)
     rtm <- terra::rast(studyArea, res = c(250, 250), crs = targetCRS)
     rtm[] <- 1
     rtm <- terra::mask(rtm, studyArea)
     rtm
-  },
+  }, 
   rasterToMatch = {
     targetCRS <- terra::crs(studyArea)
     rtm<- terra::rast(studyArea, res = c(250, 250), crs = targetCRS)
