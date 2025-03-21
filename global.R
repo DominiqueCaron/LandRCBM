@@ -16,9 +16,9 @@ out <- SpaDES.project::setupProject(
     "PredictiveEcology/Biomass_speciesFactorial@development",
     "PredictiveEcology/Biomass_borealDataPrep@development",
     "PredictiveEcology/Biomass_speciesParameters@development",
-    "PredictiveEcology/Biomass_yieldTables@main",
+    "DominiqueCaron/Biomass_yieldTables@reorganisation",
     "PredictiveEcology/Biomass_core@main",
-    "DominiqueCaron/LandRCBM_split3pools@dom-enhancement"
+    "DominiqueCaron/LandRCBM_split3pools@restructuration"
   ),
   params = list(
     .globals = list(
