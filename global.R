@@ -11,7 +11,7 @@ out <- SpaDES.project::setupProject(
                cachePath = "cache"),
   options = options(spades.moduleCodeChecks = FALSE,
                     spades.recoveryMode = FALSE),
-  times = list(start = 2011, end = 2061),
+  times = list(start = 2011, end = 2211),
   modules = c(
     "PredictiveEcology/Biomass_speciesFactorial@development",
     "PredictiveEcology/Biomass_borealDataPrep@development",
@@ -19,13 +19,13 @@ out <- SpaDES.project::setupProject(
     "PredictiveEcology/Biomass_regeneration@development",
     "DominiqueCaron/Biomass_yieldTables@reorganisation",
     "PredictiveEcology/Biomass_core@main",
-    "DominiqueCaron/LandRCBM_split3pools@restructuration",
+    "DominiqueCaron/LandRCBM_split3pools@add-fire",
     file.path("PredictiveEcology/scfm@sfContains/modules",
               c("scfmDataPrep", "scfmIgnition", "scfmEscape", "scfmSpread",
                 "scfmDiagnostics"))
     
   ),
-  packages = c("googledrive", 'RCurl', 'XML', "stars"),
+  packages = c("googledrive", 'RCurl', 'XML', "stars", "httr2"),
   useGit = F,
   functions = "R/getRIA.R",
   # Study area is RIA
@@ -35,9 +35,10 @@ out <- SpaDES.project::setupProject(
       destinationPath = "inputs",
       fun = getRIA,
       overwrite = TRUE
-    )|> sf::st_crop(c(xmin = 1150000, xmax = 1200000, ymin = 1250000, ymax = 1300000))
+    )#|> sf::st_crop(c(xmin = 1000000, xmax = 1200000, ymin = 1100000, ymax = 1300000))
   }, 
-  studyAreaCalibration = st_buffer(studyArea, 500000),
+  #studyAreaCalibration = sf::st_buffer(studyArea, 100000),
+  studyAreaCalibration = studyArea,
   studyAreaLarge = studyArea,
   rasterToMatch = {
     targetCRS <- terra::crs(studyArea)
@@ -66,7 +67,7 @@ out <- SpaDES.project::setupProject(
     .globals = list(
       dataYear = 2011, #will get kNN 2011 data, and NTEMS 2011 landcover
       .plots = c("png"),
-      .plotInterval = 10,
+      .plotInterval = 25,
       sppEquivCol = 'LandR',
       .studyAreaName = "RIA"
     ),
@@ -94,8 +95,7 @@ out <- SpaDES.project::setupProject(
                         flammabilityThreshold = 0.05,
                         .useParallelFireRegimePolys = FALSE,
                         fireEpoch = c(1971, 2020)
-    ),
-    scfmSpread = list(.plotInterval = 10)
+    )
   )
 )
 
