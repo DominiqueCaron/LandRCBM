@@ -1,3 +1,9 @@
+###
+###
+# This script runs vegetation dynamics without disturbances.
+###
+###
+
 # Get the minimal amount of packages
 repos <- c("predictiveecology.r-universe.dev", getOption("repos"))
 if (!require("SpaDES.project")){
@@ -7,7 +13,7 @@ if (!require("SpaDES.project")){
 out <- SpaDES.project::setupProject(
   paths = list(projectPath = getwd(),
                inputPath = "inputs",
-               outputPath = "outputs",
+               outputPath = "outputs/LandRtoSplit3pools",
                cachePath = "cache"),
   options = options(spades.moduleCodeChecks = FALSE,
                     spades.recoveryMode = FALSE),
@@ -17,13 +23,9 @@ out <- SpaDES.project::setupProject(
     "PredictiveEcology/Biomass_borealDataPrep@development",
     "PredictiveEcology/Biomass_speciesParameters@development",
     "PredictiveEcology/Biomass_regeneration@development",
-    "DominiqueCaron/Biomass_yieldTables@reorganisation",
+    "PredictiveEcology/Biomass_yieldTables@main",
     "PredictiveEcology/Biomass_core@main",
-    "DominiqueCaron/LandRCBM_split3pools@add-fire",
-    file.path("PredictiveEcology/scfm@sfContains/modules",
-              c("scfmDataPrep", "scfmIgnition", "scfmEscape", "scfmSpread",
-                "scfmDiagnostics"))
-    
+    "PredictiveEcology/LandRCBM_split3pools@master"
   ),
   packages = c("googledrive", 'RCurl', 'XML', "stars", "httr2"),
   useGit = F,
@@ -37,24 +39,15 @@ out <- SpaDES.project::setupProject(
       overwrite = TRUE
     )#|> sf::st_crop(c(xmin = 1000000, xmax = 1200000, ymin = 1100000, ymax = 1300000))
   }, 
-  #studyAreaCalibration = sf::st_buffer(studyArea, 100000),
-  studyAreaCalibration = studyArea,
   studyAreaLarge = studyArea,
   rasterToMatch = {
-    targetCRS <- terra::crs(studyArea)
-    rtm <- terra::rast(terra::vect(studyArea), res = c(250, 250))
+    sa <- terra::vect(studyArea)
+    targetCRS <- terra::crs(sa)
+    rtm <- terra::rast(sa, res = c(250, 250))
     terra::crs(rtm) <- targetCRS
     rtm[] <- 1
-    rtm <- terra::mask(rtm, terra::vect(studyArea))
+    rtm <- terra::mask(rtm, sa)
     rtm
-  },
-  rasterToMatchCalibration = {
-    targetCRS <- terra::crs(studyAreaCalibration)
-    rtmc <- terra::rast(terra::vect(studyAreaCalibration), res = c(250, 250))
-    terra::crs(rtmc) <- targetCRS
-    rtmc[] <- 1
-    rtmc <- terra::mask(rtmc, terra::vect(studyAreaCalibration))
-    rtmc
   },
   sppEquiv = {
     speciesInStudy <- LandR::speciesInStudyArea(studyArea,
@@ -87,14 +80,9 @@ out <- SpaDES.project::setupProject(
       speciesFittingApproach = "focal"
     ),
     Biomass_yieldTables = list(
-      moduleNameAndBranch = "PredictiveEcology/Biomass_core@main",
+      moduleNameAndBranch = "PredictiveEcology/Biomass_core@development",
       .plots = "png",
       .useCache = "generateData"
-    ),
-    scfmDataPrep = list(targetN = 4000,
-                        flammabilityThreshold = 0.05,
-                        .useParallelFireRegimePolys = FALSE,
-                        fireEpoch = c(1971, 2020)
     )
   )
 )
