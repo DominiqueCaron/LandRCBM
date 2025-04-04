@@ -22,7 +22,6 @@ out <- SpaDES.project::setupProject(
     "PredictiveEcology/Biomass_speciesFactorial@development",
     "PredictiveEcology/Biomass_borealDataPrep@development",
     "PredictiveEcology/Biomass_speciesParameters@development",
-    "PredictiveEcology/Biomass_regeneration@development",
     "PredictiveEcology/Biomass_yieldTables@main",
     "PredictiveEcology/Biomass_core@main",
     "PredictiveEcology/LandRCBM_split3pools@master"
@@ -37,7 +36,7 @@ out <- SpaDES.project::setupProject(
       destinationPath = "inputs",
       fun = getRIA,
       overwrite = TRUE
-    )#|> sf::st_crop(c(xmin = 1000000, xmax = 1200000, ymin = 1100000, ymax = 1300000))
+    )|> sf::st_crop(c(xmin = 1000000, xmax = 1200000, ymin = 1100000, ymax = 1300000))
   }, 
   studyAreaLarge = studyArea,
   rasterToMatch = {
