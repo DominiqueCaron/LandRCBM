@@ -1,6 +1,6 @@
 ###
 ###
-# This script creates yield tables using LandR and PSP species trait parameterization.
+# This script creates yield tables using LandR and PSP species trait parametrization.
 ###
 ###
 
