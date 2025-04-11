@@ -23,7 +23,7 @@ out <- SpaDES.project::setupProject(
     "PredictiveEcology/Biomass_borealDataPrep@development",
     "PredictiveEcology/Biomass_speciesParameters@development",
     "PredictiveEcology/CBM_defaults@development",
-    "PredictiveEcology/CBM_dataPrep_RIA@suz-init",
+    "PredictiveEcology/CBM_dataPrep_RIA@presentDay",
     "PredictiveEcology/Biomass_yieldTables@main",
     "PredictiveEcology/Biomass_core@main",
     "PredictiveEcology/LandRCBM_split3pools@master",
@@ -51,7 +51,7 @@ out <- SpaDES.project::setupProject(
     rtm <- terra::mask(rtm, sa)
     rtm
   },
-  masterRaster <- rasterToMatch,
+  masterRaster = rasterToMatch,
   sppEquiv = {
     speciesInStudy <- LandR::speciesInStudyArea(studyArea,
                                                 dPath = "inputs")
