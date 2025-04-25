@@ -17,17 +17,17 @@ out <- SpaDES.project::setupProject(
                cachePath = "cache"),
   options = options(spades.moduleCodeChecks = FALSE,
                     spades.recoveryMode = FALSE),
-  times = list(start = 2011, end = 2011),
+  times = list(start = 2015, end = 2015),
   modules = c(
     "PredictiveEcology/Biomass_speciesFactorial@development",
     "PredictiveEcology/Biomass_borealDataPrep@development",
     "PredictiveEcology/Biomass_speciesParameters@development",
     "PredictiveEcology/CBM_defaults@development",
-    "PredictiveEcology/CBM_dataPrep_RIA@suz-init",
+    "DominiqueCaron/CBM_dataPrep_RIA@run-with-LandR",
     "PredictiveEcology/Biomass_yieldTables@main",
     "PredictiveEcology/Biomass_core@main",
-    "PredictiveEcology/LandRCBM_split3pools@master",
-    "PredictiveEcology/CBM_core@development"
+    "DominiqueCaron/LandRCBM_split3pools@run-with-CBM",
+    "DominiqueCaron/CBM_core@run-with-LandR"
   ),
   packages = c("googledrive", 'RCurl', 'XML', "stars", "httr2"),
   useGit = F,
@@ -51,7 +51,7 @@ out <- SpaDES.project::setupProject(
     rtm <- terra::mask(rtm, sa)
     rtm
   },
-  masterRaster <- rasterToMatch,
+  masterRaster = rasterToMatch,
   sppEquiv = {
     speciesInStudy <- LandR::speciesInStudyArea(studyArea,
                                                 dPath = "inputs")
@@ -59,7 +59,6 @@ out <- SpaDES.project::setupProject(
     sppEquiv <- LandR::sppEquivalencies_CA[LandR %in% species]
     sppEquiv <- sppEquiv[KNN != "" & LANDIS_traits != ""] #avoid a bug with shore pine
   },
-  disturbanceRastersURL = "https://drive.google.com/file/d/12YnuQYytjcBej0_kdodLchPg7z9LygCt",
   params = list(
     .globals = list(
       dataYear = 2011, #will get kNN 2011 data, and NTEMS 2011 landcover
