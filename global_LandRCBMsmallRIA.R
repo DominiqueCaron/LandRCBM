@@ -17,17 +17,21 @@ out <- SpaDES.project::setupProject(
                cachePath = "cache"),
   options = options(spades.moduleCodeChecks = FALSE,
                     spades.recoveryMode = FALSE),
-  times = list(start = 2015, end = 2015),
+  times = list(start = 1985, end = 2015),
   modules = c(
     "PredictiveEcology/Biomass_speciesFactorial@development",
     "PredictiveEcology/Biomass_borealDataPrep@development",
     "PredictiveEcology/Biomass_speciesParameters@development",
     "PredictiveEcology/CBM_defaults@development",
-    "DominiqueCaron/CBM_dataPrep_RIA@run-with-LandR",
+    "PredictiveEcology/Biomass_regeneration@development",
     "PredictiveEcology/Biomass_yieldTables@main",
-    "PredictiveEcology/Biomass_core@main",
+    "PredictiveEcology/Biomass_core@development",
     "DominiqueCaron/LandRCBM_split3pools@run-with-CBM",
-    "DominiqueCaron/CBM_core@run-with-LandR"
+    "DominiqueCaron/CBM_core@run-with-LandR",
+    file.path("PredictiveEcology/scfm@development/modules",
+              c("scfmDataPrep",
+                "scfmIgnition", "scfmEscape", "scfmSpread",
+                "scfmDiagnostics"))
   ),
   packages = c("googledrive", 'RCurl', 'XML', "stars", "httr2"),
   useGit = F,
@@ -51,7 +55,6 @@ out <- SpaDES.project::setupProject(
     rtm <- terra::mask(rtm, sa)
     rtm
   },
-  masterRaster = rasterToMatch,
   sppEquiv = {
     speciesInStudy <- LandR::speciesInStudyArea(studyArea,
                                                 dPath = "inputs")
@@ -63,13 +66,17 @@ out <- SpaDES.project::setupProject(
     .globals = list(
       dataYear = 2011, #will get kNN 2011 data, and NTEMS 2011 landcover
       .plots = c("png"),
-      .plotInterval = 25,
+      .plotInterval = 10,
       sppEquivCol = 'LandR',
-      .studyAreaName = "RIA"
+      .studyAreaName = "RIA",
+      minCohortBiomass = 9
     ),
     Biomass_borealDataPrep = list(
       .studyAreaName = "RIA",
       subsetDataBiomassModel = 50
+    ),
+    LandRCBM_split3pools = list(
+      simulateDisturbances = "all"
     ),
     Biomass_speciesFactorial = list(
       .plots = NULL, #"pdf",
@@ -86,6 +93,11 @@ out <- SpaDES.project::setupProject(
       moduleNameAndBranch = "PredictiveEcology/Biomass_core@development",
       .plots = "png",
       .useCache = "generateData"
+    ),
+    scfmDataPrep = list(targetN = 4000,
+                        flammabilityThreshold = 0.05,
+                        .useParallelFireRegimePolys = FALSE,
+                        fireEpoch = c(1971, 2020)
     )
   )
 )
