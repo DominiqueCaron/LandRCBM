@@ -46,6 +46,7 @@ out <- SpaDES.project::setupProject(
     )|> sf::st_crop(c(xmin = 1000000, xmax = 1200000, ymin = 1100000, ymax = 1300000))
   }, 
   studyAreaLarge = studyArea,
+  studyAreaCalibration = sf::st_buffer(studyArea, dist = 10^5),
   rasterToMatch = {
     sa <- terra::vect(studyArea)
     targetCRS <- terra::crs(sa)
@@ -54,6 +55,15 @@ out <- SpaDES.project::setupProject(
     rtm[] <- 1
     rtm <- terra::mask(rtm, sa)
     rtm
+  },
+  rasterToMatchCalibration = {
+    sac <- terra::vect(studyAreaCalibration)
+    targetCRS <- terra::crs(sac)
+    rtmc <- terra::rast(sac, res = c(250, 250))
+    terra::crs(rtmc) <- targetCRS
+    rtmc[] <- 1
+    rtmc <- terra::mask(rtmc, sac)
+    rtmc
   },
   sppEquiv = {
     speciesInStudy <- LandR::speciesInStudyArea(studyArea,
@@ -64,12 +74,11 @@ out <- SpaDES.project::setupProject(
   },
   params = list(
     .globals = list(
-      dataYear = 2011, #will get kNN 2011 data, and NTEMS 2011 landcover
+      dataYear = 2001, #will get kNN 2011 data, and NTEMS 2011 landcover
       .plots = c("png"),
       .plotInterval = 10,
       sppEquivCol = 'LandR',
-      .studyAreaName = "RIA",
-      minCohortBiomass = 9
+      .studyAreaName = "RIA"
     ),
     Biomass_borealDataPrep = list(
       .studyAreaName = "RIA",
@@ -97,7 +106,8 @@ out <- SpaDES.project::setupProject(
     scfmDataPrep = list(targetN = 4000,
                         flammabilityThreshold = 0.05,
                         .useParallelFireRegimePolys = FALSE,
-                        fireEpoch = c(1971, 2020)
+                        fireEpoch = c(1971, 2020),
+                        fireRegimePolysType = "FRU"
     )
   )
 )
