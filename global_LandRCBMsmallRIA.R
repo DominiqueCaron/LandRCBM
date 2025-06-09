@@ -17,7 +17,7 @@ out <- SpaDES.project::setupProject(
                cachePath = "cache"),
   options = options(spades.moduleCodeChecks = FALSE,
                     spades.recoveryMode = FALSE),
-  times = list(start = 1985, end = 2015),
+  times = list(start = 1985, end = 2085),
   modules = c(
     "PredictiveEcology/Biomass_speciesFactorial@development",
     "PredictiveEcology/Biomass_borealDataPrep@development",
@@ -26,8 +26,9 @@ out <- SpaDES.project::setupProject(
     "PredictiveEcology/Biomass_regeneration@development",
     "PredictiveEcology/Biomass_yieldTables@main",
     "PredictiveEcology/Biomass_core@development",
+    "PredictiveEcology/CBM_dataPrep@suz-distRasters",
     "DominiqueCaron/LandRCBM_split3pools@run-with-CBM",
-    "DominiqueCaron/CBM_core@run-with-LandR",
+    "DominiqueCaron/CBM_core@LandRCBM-simplify-core",
     file.path("PredictiveEcology/scfm@development/modules",
               c("scfmDataPrep",
                 "scfmIgnition", "scfmEscape", "scfmSpread",
@@ -56,6 +57,11 @@ out <- SpaDES.project::setupProject(
     rtm <- terra::mask(rtm, sa)
     rtm
   },
+  masterRaster = {
+    masterRaster = rasterToMatch
+    names(masterRaster) <- "ldSp_TestArea"
+    masterRaster
+  },
   rasterToMatchCalibration = {
     sac <- terra::vect(studyAreaCalibration)
     targetCRS <- terra::crs(sac)
@@ -72,6 +78,14 @@ out <- SpaDES.project::setupProject(
     sppEquiv <- LandR::sppEquivalencies_CA[LandR %in% species]
     sppEquiv <- sppEquiv[KNN != "" & LANDIS_traits != ""] #avoid a bug with shore pine
   },
+  disturbanceMeta = data.table(
+    eventID = 1,
+    wholeStand = 1,
+    disturbance_type_id = 1,
+    distName = "Wildfire",
+    objectName = "rstCurrentBurn",
+    delay = 1
+  ),
   params = list(
     .globals = list(
       dataYear = 2001, #will get kNN 2011 data, and NTEMS 2011 landcover
@@ -80,12 +94,15 @@ out <- SpaDES.project::setupProject(
       sppEquivCol = 'LandR',
       .studyAreaName = "RIA"
     ),
+    CBM_core = list(
+      skipCohortGroupHandling = TRUE,
+      skipPrepareCBMvars = TRUE
+    ),
     Biomass_borealDataPrep = list(
+      overrideAgeInFires = FALSE,
+      overrideBiomassInFires = FALSE,
       .studyAreaName = "RIA",
       subsetDataBiomassModel = 50
-    ),
-    LandRCBM_split3pools = list(
-      simulateDisturbances = "all"
     ),
     Biomass_speciesFactorial = list(
       .plots = NULL, #"pdf",
