@@ -26,9 +26,9 @@ out <- SpaDES.project::setupProject(
     "PredictiveEcology/Biomass_regeneration@development",
     "PredictiveEcology/Biomass_yieldTables@main",
     "PredictiveEcology/Biomass_core@development",
-    "PredictiveEcology/CBM_dataPrep@suz-distRasters",
-    "DominiqueCaron/LandRCBM_split3pools@run-with-CBM",
-    "DominiqueCaron/CBM_core@LandRCBM-simplify-core",
+    "PredictiveEcology/CBM_dataPrep@development",
+    "DominiqueCaron/LandRCBM_split3pools@optimize",
+    "PredictiveEcology/CBM_core@development",
     file.path("PredictiveEcology/scfm@development/modules",
               c("scfmDataPrep",
                 "scfmIgnition", "scfmEscape", "scfmSpread",
@@ -44,10 +44,9 @@ out <- SpaDES.project::setupProject(
       destinationPath = "inputs",
       fun = getRIA,
       overwrite = TRUE
-    )|> sf::st_crop(c(xmin = 1000000, xmax = 1200000, ymin = 1100000, ymax = 1300000))
-  }, 
-  studyAreaLarge = studyArea,
-  studyAreaCalibration = sf::st_buffer(studyArea, dist = 10^5),
+    ) |> sf::st_crop(c(xmin = 1000000, xmax = 1200000, ymin = 1100000, ymax = 1300000))
+  },
+  studyArea_biomassParam = studyArea,
   rasterToMatch = {
     sa <- terra::vect(studyArea)
     targetCRS <- terra::crs(sa)
@@ -59,17 +58,7 @@ out <- SpaDES.project::setupProject(
   },
   masterRaster = {
     masterRaster = rasterToMatch
-    names(masterRaster) <- "ldSp_TestArea"
     masterRaster
-  },
-  rasterToMatchCalibration = {
-    sac <- terra::vect(studyAreaCalibration)
-    targetCRS <- terra::crs(sac)
-    rtmc <- terra::rast(sac, res = c(250, 250))
-    terra::crs(rtmc) <- targetCRS
-    rtmc[] <- 1
-    rtmc <- terra::mask(rtmc, sac)
-    rtmc
   },
   sppEquiv = {
     speciesInStudy <- LandR::speciesInStudyArea(studyArea,
@@ -92,7 +81,6 @@ out <- SpaDES.project::setupProject(
   )),
   params = list(
     .globals = list(
-      dataYear = 2001, #will get kNN 2011 data, and NTEMS 2011 landcover
       .plots = c("png"),
       .plotInterval = 10,
       sppEquivCol = 'LandR',
@@ -103,8 +91,6 @@ out <- SpaDES.project::setupProject(
       skipPrepareCBMvars = TRUE
     ),
     Biomass_borealDataPrep = list(
-      overrideAgeInFires = FALSE,
-      overrideBiomassInFires = FALSE,
       .studyAreaName = "RIA",
       subsetDataBiomassModel = 50
     ),
@@ -121,6 +107,7 @@ out <- SpaDES.project::setupProject(
     ),
     Biomass_yieldTables = list(
       moduleNameAndBranch = "PredictiveEcology/Biomass_core@development",
+      maxAge = 200,
       .plots = "png",
       .useCache = "generateData"
     ),
@@ -137,3 +124,4 @@ out$loadOrder <- unlist(out$modules)
 
 initOut <- SpaDES.core::simInit2(out)
 simOut <- SpaDES.core::spades(initOut)
+
