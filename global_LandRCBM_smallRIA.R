@@ -1,6 +1,7 @@
 ###
 ###
 # This script runs LandR and CBM in a small area in RIA.
+# It simulates fire with scfm
 ###
 ###
 
@@ -12,7 +13,7 @@ if (!require("SpaDES.project")){
 
 out <- SpaDES.project::setupProject(
   paths = list(projectPath = getwd(),
-               inputPath = "inputs",
+               inputPath = "~/inputs",
                outputPath = "outputs/LandRCBM_RIAsmall",
                cachePath = "cache"),
   options = options(spades.moduleCodeChecks = FALSE,
@@ -27,7 +28,7 @@ out <- SpaDES.project::setupProject(
     "PredictiveEcology/Biomass_yieldTables@main",
     "PredictiveEcology/Biomass_core@development",
     "PredictiveEcology/CBM_dataPrep@development",
-    "DominiqueCaron/LandRCBM_split3pools@optimize",
+    "PredictiveEcology/LandRCBM_split3pools@main",
     "PredictiveEcology/CBM_core@development",
     file.path("PredictiveEcology/scfm@development/modules",
               c("scfmDataPrep",
@@ -75,10 +76,6 @@ out <- SpaDES.project::setupProject(
     objectName = "rstCurrentBurn",
     delay = 1
   ),
-  outputs = as.data.frame(expand.grid(
-    objectName = c("cbmPools", "NPP"),
-    saveTime   = sort(c(times$start, times$start + c(1:(times$end - times$start))))
-  )),
   params = list(
     .globals = list(
       .plots = c("png"),
@@ -87,7 +84,6 @@ out <- SpaDES.project::setupProject(
       .studyAreaName = "RIA"
     ),
     CBM_core = list(
-      skipCohortGroupHandling = TRUE,
       skipPrepareCBMvars = TRUE
     ),
     Biomass_borealDataPrep = list(
