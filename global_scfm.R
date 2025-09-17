@@ -14,7 +14,7 @@ if (!require("SpaDES.project")){
 out <- SpaDES.project::setupProject(
   paths = list(projectPath = getwd(),
                inputPath = "~/inputs",
-               outputPath = "outputs/LandRCBM_RIAsmall",
+               outputPath = "outputs/ria_scfm",
                cachePath = "cache"),
   options = options(spades.moduleCodeChecks = FALSE,
                     spades.recoveryMode = FALSE),

@@ -18,13 +18,13 @@ Runs LandR Biomass and spadesCBM without disturbances for a small test area () w
 Runs LandR Biomass and spadesCBM with historical disturbances (NTEMS) for a small area () within the Northwest Territories. It estimates carbon between 2011 and 2020. 
 
 ## Benchmarks
-All computation time and memory benchmarks are for the spades call and are estimated using `profvis`.
+All computation time and memory benchmarks are for the spades call without any operation cached and are estimated using `profvis`.
 
 As of Sep 17 2025:
 
 | Script             | Running time  | Maximum RAM |
 | ------------------ | ------------- | ----------- |
-| global_testData    |               |             |
+| global_testData    |  4h12min      |             |
 | global_scfm        |               |             |
 | global_yieldTables |               |             |
 | global_noDist      |               |             |
