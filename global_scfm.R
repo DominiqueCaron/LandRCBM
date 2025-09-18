@@ -42,7 +42,7 @@ out <- SpaDES.project::setupProject(
   studyArea = {
     reproducible::prepInputs(
       url = "https://drive.google.com/file/d/1LxacDOobTrRUppamkGgVAUFIxNT4iiHU/view?usp=sharing",
-      destinationPath = "inputs",
+      destinationPath = "~/inputs",
       fun = getRIA,
       overwrite = TRUE
     ) |> sf::st_crop(c(xmin = 1000000, xmax = 1200000, ymin = 1100000, ymax = 1300000))
@@ -63,7 +63,7 @@ out <- SpaDES.project::setupProject(
   },
   sppEquiv = {
     speciesInStudy <- LandR::speciesInStudyArea(studyArea,
-                                                dPath = "inputs")
+                                                dPath = "~/inputs")
     species <- LandR::equivalentName(speciesInStudy$speciesList, df = LandR::sppEquivalencies_CA, "LandR")
     sppEquiv <- LandR::sppEquivalencies_CA[LandR %in% species]
     sppEquiv <- sppEquiv[KNN != "" & LANDIS_traits != ""] #avoid a bug with shore pine

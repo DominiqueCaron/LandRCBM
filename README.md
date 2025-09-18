@@ -26,6 +26,6 @@ As of Sep 17 2025:
 | ------------------ | ------------- | ----------- |
 | global_testData    | 3 min         | 3.5 GB      |
 | global_scfm        | 4h 12min      |             |
-| global_yieldTables | 1h 50min      |
+| global_yieldTables | 1h 50min      |             |
 | global_noDist      |               |             |
 | global_histFires   |               |             |

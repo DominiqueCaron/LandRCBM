@@ -1,6 +1,6 @@
 ###
 ###
-# This script runs LandR and CBM in a small area in RIA to create test data.
+# This script runs LandR and CBM in a small area in RIA.
 ###
 ###
 
@@ -13,16 +13,22 @@ if (!require("SpaDES.project")){
 out <- SpaDES.project::setupProject(
   paths = list(projectPath = getwd(),
                inputPath = "~/inputs",
-               outputPath = "outputs/testData",
+               outputPath = "outputs/ria_noDist",
                cachePath = "cache"),
   options = options(spades.moduleCodeChecks = FALSE,
                     spades.recoveryMode = FALSE),
-  times = list(start = 2000, end = 2000),
+  times = list(start = 1985, end = 2015),
   modules = c(
+    "PredictiveEcology/Biomass_speciesFactorial@development",
     "PredictiveEcology/Biomass_borealDataPrep@development",
+    "PredictiveEcology/Biomass_speciesParameters@development",
     "PredictiveEcology/CBM_defaults@development",
+    "PredictiveEcology/Biomass_regeneration@development",
     "PredictiveEcology/Biomass_yieldTables@main",
-    "PredictiveEcology/CBM_dataPrep@development"
+    "PredictiveEcology/Biomass_core@development",
+    "PredictiveEcology/CBM_dataPrep@development",
+    "PredictiveEcology/LandRCBM_split3pools@main",
+    "PredictiveEcology/CBM_core@development"
   ),
   packages = c("googledrive", 'RCurl', 'XML', "stars", "httr2"),
   useGit = F,
@@ -31,12 +37,12 @@ out <- SpaDES.project::setupProject(
   studyArea = {
     reproducible::prepInputs(
       url = "https://drive.google.com/file/d/1LxacDOobTrRUppamkGgVAUFIxNT4iiHU/view?usp=sharing",
-      destinationPath = "inputs",
+      destinationPath = "~/inputs",
       fun = getRIA,
       overwrite = TRUE
-    )|> sf::st_crop(c(xmin = 1018000, xmax = 1020000, ymin = 1200000, ymax = 1202000))
-  }, 
-  studyAreaBiomassParam = sf::st_buffer(studyArea, 10^6),
+    ) |> sf::st_crop(c(xmin = 1000000, xmax = 1200000, ymin = 1100000, ymax = 1300000))
+  },
+  studyArea_biomassParam = studyArea,
   rasterToMatch = {
     sa <- terra::vect(studyArea)
     targetCRS <- terra::crs(sa)
@@ -57,21 +63,34 @@ out <- SpaDES.project::setupProject(
     sppEquiv <- LandR::sppEquivalencies_CA[LandR %in% species]
     sppEquiv <- sppEquiv[KNN != "" & LANDIS_traits != ""] #avoid a bug with shore pine
   },
-  disturbanceMeta = data.table(),
   params = list(
     .globals = list(
-      dataYear = 2001, #will get kNN 2011 data, and NTEMS 2011 landcover
       .plots = c("png"),
       .plotInterval = 10,
       sppEquivCol = 'LandR',
       .studyAreaName = "RIA"
     ),
+    CBM_core = list(
+      skipPrepareCBMvars = TRUE
+    ),
     Biomass_borealDataPrep = list(
       .studyAreaName = "RIA",
       subsetDataBiomassModel = 50
     ),
+    Biomass_speciesFactorial = list(
+      .plots = NULL, #"pdf",
+      runExperiment = TRUE,
+      factorialSize = "medium"
+    ),
+    Biomass_speciesParameters = list(
+      .plots = "png",
+      standAgesForFitting = c(0, 125),
+      .useCache = c(".inputObjects", "init"),
+      speciesFittingApproach = "focal"
+    ),
     Biomass_yieldTables = list(
       moduleNameAndBranch = "PredictiveEcology/Biomass_core@development",
+      maxAge = 200,
       .plots = "png",
       .useCache = "generateData"
     )
@@ -82,3 +101,4 @@ out$loadOrder <- unlist(out$modules)
 
 initOut <- SpaDES.core::simInit2(out)
 simOut <- SpaDES.core::spades(initOut)
+
