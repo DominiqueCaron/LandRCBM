@@ -25,7 +25,7 @@ As of Sep 17 2025:
 | Script             | Running time  | Maximum RAM |
 | ------------------ | ------------- | ----------- |
 | global_testData    | 3 min         | 3.5 GB      |
-| global_scfm        | 4h12min       |             |
-| global_yieldTables |               |             |
+| global_scfm        | 4h 12min      |             |
+| global_yieldTables | 1h 50min      |
 | global_noDist      |               |             |
 | global_histFires   |               |             |

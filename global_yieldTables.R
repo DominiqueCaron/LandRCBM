@@ -1,6 +1,6 @@
 ###
 ###
-# This script creates yield tables using LandR and PSP species trait parametrization.
+# This script creates yield tables using LandR and PSP species trait parameterization.
 ###
 ###
 
@@ -11,10 +11,9 @@ if (!require("SpaDES.project")){
 }
 
 out <- SpaDES.project::setupProject(
-  Restart = TRUE,
   paths = list(projectPath = getwd(),
-               inputPath = "inputs",
-               outputPath = "outputs/LandRyieldTables",
+               inputPath = "~/inputs",
+               outputPath = "outputs/yieldTables",
                cachePath = "cache"),
   options = options(spades.moduleCodeChecks = FALSE,
                     spades.recoveryMode = FALSE),
