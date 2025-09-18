@@ -15,7 +15,7 @@ Creates yield tables for the entire RIA region.
 Runs LandR Biomass and spadesCBM without disturbances for a small test area () within RIA. 
 
 ## global_histFires
-Runs LandR Biomass and spadesCBM with historical disturbances (NTEMS) for a small area () within the Northwest Territories. It estimates carbon between 2011 and 2020. 
+Runs LandR Biomass and spadesCBM with historical disturbances (CanLaD) for a small test area () within RIA. 
 
 ## Benchmarks
 All computation time and memory benchmarks are for the spades call without any operation cached and are estimated using `profvis`.
@@ -27,5 +27,5 @@ As of Sep 17 2025:
 | global_testData    | 3 min         | 3.5 GB      |
 | global_scfm        | 4h 12min      |             |
 | global_yieldTables | 1h 50min      |             |
-| global_noDist      |               |             |
-| global_histFires   |               |             |
+| global_noDist      | 23 min        |             |
+| global_histFires   | 24 min        |             |
