@@ -70,6 +70,7 @@ out <- SpaDES.project::setupProject(
       sppEquivCol = 'LandR',
       .studyAreaName = "RIA"
     ),
+    Biomass_core = list(.plots = NA),
     CBM_core = list(
       skipPrepareCBMvars = TRUE
     ),

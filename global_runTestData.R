@@ -24,6 +24,7 @@ out <- SpaDES.project::setupProject(
     "PredictiveEcology/Biomass_yieldTables@main",
     "PredictiveEcology/CBM_dataPrep@development",
     "PredictiveEcology/LandRCBM_split3pools@main",
+    "PredictiveEcology/Biomass_core@development",
     "PredictiveEcology/CBM_core@development"
   ),
   packages = c("googledrive", 'RCurl', 'XML', "stars", "httr2"),
@@ -67,6 +68,7 @@ out <- SpaDES.project::setupProject(
       sppEquivCol = 'LandR',
       .studyAreaName = "RIA"
     ),
+    Biomass_core = list(.plots = NA),
     Biomass_borealDataPrep = list(
       .studyAreaName = "RIA",
       subsetDataBiomassModel = 50
