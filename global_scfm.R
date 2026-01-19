@@ -18,7 +18,7 @@ out <- SpaDES.project::setupProject(
                cachePath = "cache"),
   options = options(spades.moduleCodeChecks = FALSE,
                     spades.recoveryMode = FALSE),
-  times = list(start = 1985, end = 2015),
+  times = list(start = 1985, end = 1995),
   modules = c(
     "PredictiveEcology/Biomass_speciesFactorial@development",
     "PredictiveEcology/Biomass_borealDataPrep@development",

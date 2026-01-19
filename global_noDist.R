@@ -17,7 +17,7 @@ out <- SpaDES.project::setupProject(
                cachePath = "cache"),
   options = options(spades.moduleCodeChecks = FALSE,
                     spades.recoveryMode = FALSE),
-  times = list(start = 1985, end = 2015),
+  times = list(start = 1985, end = 2055),
   modules = c(
     "PredictiveEcology/Biomass_speciesFactorial@development",
     "PredictiveEcology/Biomass_borealDataPrep@development",
@@ -76,7 +76,8 @@ out <- SpaDES.project::setupProject(
     ),
     Biomass_borealDataPrep = list(
       .studyAreaName = "RIA",
-      subsetDataBiomassModel = 50
+      subsetDataBiomassModel = 50,
+      adjustAgeAndLongevity = TRUE
     ),
     Biomass_speciesFactorial = list(
       .plots = NULL, #"pdf",

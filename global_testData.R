@@ -68,7 +68,8 @@ out <- SpaDES.project::setupProject(
     ),
     Biomass_borealDataPrep = list(
       .studyAreaName = "RIA",
-      subsetDataBiomassModel = 50
+      subsetDataBiomassModel = 50,
+      adjustAgeToLongevity = 0.9
     ),
     Biomass_yieldTables = list(
       moduleNameAndBranch = "PredictiveEcology/Biomass_core@development",

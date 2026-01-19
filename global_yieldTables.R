@@ -17,6 +17,7 @@ out <- SpaDES.project::setupProject(
                cachePath = "cache"),
   options = options(spades.moduleCodeChecks = FALSE,
                     spades.recoveryMode = FALSE),
+  times = list(start = 2020, end = 2020),
   modules = c("PredictiveEcology/Biomass_speciesFactorial@development",
               "PredictiveEcology/Biomass_borealDataPrep@development",
               "PredictiveEcology/Biomass_speciesParameters@development",
@@ -24,11 +25,10 @@ out <- SpaDES.project::setupProject(
   ),
   params = list(
     .globals = list(
-      dataYear = 2011, #will get kNN 2011 data, and NTEMS 2011 landcover
       .plots = c("png"),
       .plotInterval = 10,
       sppEquivCol = 'LandR',
-      .studyAreaName = "RIA"
+      .studyAreaName = "RIAsmall"
     ),
     Biomass_borealDataPrep = list(
       .studyAreaName = "RIA",
@@ -46,7 +46,8 @@ out <- SpaDES.project::setupProject(
       speciesFittingApproach = "focal"
     ),
     Biomass_yieldTables = list(
-      moduleNameAndBranch = "PredictiveEcology/Biomass_core@main",
+      moduleNameAndBranch = "PredictiveEcology/Biomass_core@development",
+      maxAge = 150,
       .plots = "png",
       .useCache = "generateData"
     )
@@ -54,14 +55,14 @@ out <- SpaDES.project::setupProject(
   packages = c("googledrive", 'RCurl', 'XML', "stars"),
   useGit = F,
   functions = "R/getRIA.R",
-  # Study area is RIA
+  # Study area is within RIA (RIA buffered 150km inward)
   studyArea = {
     reproducible::prepInputs(
       url = "https://drive.google.com/file/d/1LxacDOobTrRUppamkGgVAUFIxNT4iiHU/view?usp=sharing",
       destinationPath = "inputs",
       fun = getRIA,
       overwrite = TRUE
-    )
+    ) |> sf::st_buffer(dist = -150000)
   },
   studyAreaLarge = studyArea,
   rasterToMatch = {

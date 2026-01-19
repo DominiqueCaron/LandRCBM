@@ -23,7 +23,7 @@ out <- SpaDES.project::setupProject(
     "PredictiveEcology/CBM_defaults@development",
     "PredictiveEcology/Biomass_yieldTables@main",
     "PredictiveEcology/CBM_dataPrep@development",
-    "PredictiveEcology/LandRCBM_split3pools@main",
+    "DominiqueCaron/LandRCBM_split3pools@mech-criteria",
     "PredictiveEcology/Biomass_core@development",
     "PredictiveEcology/CBM_core@development"
   ),

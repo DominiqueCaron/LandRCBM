@@ -13,7 +13,7 @@ if (!require("SpaDES.project")){
 out <- SpaDES.project::setupProject(
   paths = list(projectPath = getwd(),
                inputPath = "~/inputs",
-               outputPath = "outputs/ria_noDist",
+               outputPath = "outputs/ria_histDist",
                cachePath = "cache"),
   options = options(spades.moduleCodeChecks = FALSE,
                     spades.recoveryMode = FALSE),
@@ -81,6 +81,9 @@ out <- SpaDES.project::setupProject(
     Biomass_borealDataPrep = list(
       .studyAreaName = "RIA",
       subsetDataBiomassModel = 50
+    ),
+    Biomass_core = list(
+      .plots = NA
     ),
     Biomass_speciesFactorial = list(
       .plots = NULL, #"pdf",
